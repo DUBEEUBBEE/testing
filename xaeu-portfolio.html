@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xaeu - Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&family=Roboto&family=Montserrat&family=Poppins&family=Space+Grotesk&family=Playfair+Display&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; overflow-x: hidden; }
+        html { scroll-behavior: smooth; }
+        #canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-content { max-width: 1200px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: center; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        section { min-height: 100vh; padding: 5rem 2rem; position: relative; z-index: 1; }
+        .hero { display: flex; align-items: center; justify-content: center; text-align: center; }
+        .hero h1 { font-size: clamp(3rem, 10vw, 6rem); font-weight: bold; margin-bottom: 1rem; }
+        .hero p { font-size: clamp(1rem, 3vw, 2rem); color: #999; margin-bottom: 2rem; }
+        .btn { display: inline-block; padding: 1rem 2rem; background: #fff; color: #000; text-decoration: none; border-radius: 50px; font-weight: 600; transition: all 0.3s; margin: 0.5rem; }
+        .btn:hover { transform: scale(1.05); background: #e0e0e0; }
+        .custom-section { max-width: 1200px; margin: 2rem auto; text-align: center; }
+        .albums { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .album { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; overflow: hidden; transition: all 0.3s; cursor: pointer; }
+        .album:hover { transform: translateY(-10px); border-color: rgba(255,255,255,0.3); }
+        .album-cover { aspect-ratio: 1; background: linear-gradient(135deg, #333, #666); display: flex; align-items: center; justify-content: center; position: relative; }
+        .album-cover img { width: 100%; height: 100%; object-fit: cover; }
+        .album-info { padding: 1.5rem; }
+        .album-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .about { max-width: 800px; margin: 0 auto; background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 2rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .profile { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin: 0 auto 2rem; display: block; }
+        footer { text-align: center; padding: 3rem 2rem; color: #666; }
+        .divider { width: 100%; max-width: 600px; height: 1px; background: rgba(255,255,255,0.3); margin: 2rem auto; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; overflow-y: auto; }
+        .modal.active { display: block; }
+        .modal-content { min-height: 100vh; padding: 2rem; }
+        .modal-inner { max-width: 1200px; margin: 0 auto; }
+        .back-btn { display: flex; align-items: center; gap: 0.5rem; color: #fff; background: none; border: none; cursor: pointer; font-size: 1rem; margin-bottom: 2rem; }
+        .back-btn:hover { color: #ccc; }
+        .album-detail { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+        @media (min-width: 768px) {
+            .album-detail { grid-template-columns: 1fr 1fr; }
+        }
+        .album-detail-cover { aspect-ratio: 1; background: linear-gradient(135deg, #333, #666); border-radius: 1rem; overflow: hidden; }
+        .album-detail-cover img { width: 100%; height: 100%; object-fit: cover; }
+        .album-detail-info h1 { font-size: 3rem; margin-bottom: 1rem; }
+        .album-detail-info p { color: #999; margin-bottom: 0.5rem; }
+        .video-container { aspect-ratio: 16/9; margin: 2rem 0; border-radius: 0.5rem; overflow: hidden; }
+        .links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+        .link { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: rgba(255,255,255,0.1); border-radius: 50px; text-decoration: none; color: #fff; transition: all 0.3s; }
+        .link:hover { background: rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <nav><div class="nav-content"><div class="logo">xaeu</div></div></nav>
+    
+    <section class="hero">
+        <div>
+            <h1>xaeu</h1>
+            <p>Electronic Music Producer & Audio Visual Artist</p>
+            <div>
+                <a href="#music" class="btn" style="font-family: 'Inter'">Listen Now</a>
+            </div>
+        </div>
+    </section>
+    
+    
+    
+    <section id="music">
+        <h2 style="text-align: center; font-size: 3rem; margin-bottom: 3rem;">Releases</h2>
+        <div class="albums">
+            
+                <div class="album" onclick="showAlbumDetail(1)">
+                    <div class="album-cover"><span style="font-size: 4rem; color: #666;">No Image</span></div>
+                    <div class="album-info">
+                        <h3 class="album-title">Digital Dreams</h3>
+                        <p style="color: #999;">xaeu</p>
+                        <p style="color: #666; font-size: 0.875rem;">2024</p>
+                    </div>
+                </div>
+            
+                <div class="album" onclick="showAlbumDetail(2)">
+                    <div class="album-cover"><span style="font-size: 4rem; color: #666;">No Image</span></div>
+                    <div class="album-info">
+                        <h3 class="album-title">Neon Pulse</h3>
+                        <p style="color: #999;">xaeu</p>
+                        <p style="color: #666; font-size: 0.875rem;">2024</p>
+                    </div>
+                </div>
+            
+        </div>
+    </section>
+    
+    <section>
+        <h2 style="text-align: center; font-size: 3rem; margin-bottom: 3rem;">About</h2>
+        <div class="about">
+            
+            <h3 style="font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">xaeu</h3>
+            <p style="font-size: 1.25rem; color: #999; margin-bottom: 1.5rem;">Electronic Music Producer</p>
+            <p style="color: #ccc; line-height: 1.8; margin-bottom: 2rem;">Creating immersive soundscapes and audio-visual experiences.</p>
+            <a href="mailto:contact@xaeu.music" class="btn">Contact</a>
+        </div>
+    </section>
+    
+    <footer><p>© 2025 xaeu. All rights reserved.</p></footer>
+    
+    
+        <div id="modal-1" class="modal">
+            <div class="modal-content">
+                <div class="modal-inner">
+                    <button class="back-btn" onclick="closeAlbumDetail(1)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Back
+                    </button>
+                    <div class="album-detail">
+                        <div class="album-detail-cover">
+                            <div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 4rem; color: #666;">No Image</div>
+                        </div>
+                        <div class="album-detail-info">
+                            <h1>Digital Dreams</h1>
+                            <p style="font-size: 1.25rem; color: #999;">xaeu</p>
+                            <p style="color: #666;">2024</p>
+                            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">소개</h3>
+                            <p style="color: #ccc; line-height: 1.8;">Ambient soundscapes and digital textures.</p>
+                            
+                            <div class="links">
+                                
+                                
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div id="modal-2" class="modal">
+            <div class="modal-content">
+                <div class="modal-inner">
+                    <button class="back-btn" onclick="closeAlbumDetail(2)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Back
+                    </button>
+                    <div class="album-detail">
+                        <div class="album-detail-cover">
+                            <div style="display: flex; align-items: center; justify-content: center; height: 100%; font-size: 4rem; color: #666;">No Image</div>
+                        </div>
+                        <div class="album-detail-info">
+                            <h1>Neon Pulse</h1>
+                            <p style="font-size: 1.25rem; color: #999;">xaeu</p>
+                            <p style="color: #666;">2024</p>
+                            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">소개</h3>
+                            <p style="color: #ccc; line-height: 1.8;">High-energy electronic beats.</p>
+                            
+                            <div class="links">
+                                
+                                
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+    <script>
+        // 3D 파티클 애니메이션
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                mouseX = e.touches[0].clientX;
+                mouseY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+        
+        const particles = [];
+        for (let i = 0; i < 6000; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                z: Math.random() * 1000,
+                baseX: Math.random() * canvas.width,
+                baseY: Math.random() * canvas.height,
+                size: Math.random() * 0.5 + 0.2,
+                speedZ: Math.random() * 1 + 0.3,
+                attractSpeed: Math.random() * 0.08 + 0.04
+            });
+        }
+        
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.95)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 광원 (작고 밝게)
+            const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 80);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+            gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.4)');
+            gradient.addColorStop(0.7, 'rgba(255, 255, 255, 0.1)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(p => {
+                p.z -= p.speedZ;
+                if (p.z <= 0) {
+                    p.z = 1000;
+                    p.baseX = Math.random() * canvas.width;
+                    p.baseY = Math.random() * canvas.height;
+                    p.x = p.baseX;
+                    p.y = p.baseY;
+                }
+                
+                const dx = mouseX - p.x;
+                const dy = mouseY - p.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                if (dist < 180) {
+                    const force = (1 - dist / 180) * p.attractSpeed;
+                    p.x += dx * force;
+                    p.y += dy * force;
+                } else {
+                    p.x += (p.baseX - p.x) * 0.005;
+                    p.y += (p.baseY - p.y) * 0.005;
+                }
+                
+                const scale = 1000 / (1000 + p.z);
+                const x2d = (p.x - canvas.width / 2) * scale + canvas.width / 2;
+                const y2d = (p.y - canvas.height / 2) * scale + canvas.height / 2;
+                const size = p.size * scale;
+                const alpha = (1 - p.z / 1000) * 0.8;
+                
+                const distToMouse = Math.sqrt(Math.pow(x2d - mouseX, 2) + Math.pow(y2d - mouseY, 2));
+                const brightness = Math.min(255, 230 + (1 - Math.min(distToMouse / 180, 1)) * 25);
+                
+                ctx.fillStyle = 'rgba(' + brightness + ', ' + brightness + ', ' + brightness + ', ' + alpha + ')';
+                ctx.beginPath();
+                ctx.arc(x2d, y2d, size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        animate();
+        
+        // 스무스 스크롤
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        
+        // 앨범 상세 페이지
+        function showAlbumDetail(id) {
+            document.getElementById('modal-' + id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeAlbumDetail(id) {
+            document.getElementById('modal-' + id).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>
